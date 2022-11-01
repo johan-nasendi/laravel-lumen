@@ -22,20 +22,29 @@ $router->get('/', function () use ($router) {
 //     return  \Illuminate\Support\Str::random(32);
 // });
 
-// Basic Routing
-// $router->get('foo', function () {
-//     return 'Hello World';
-// });
+$router->get(config('swagger-lume.routes.docs'), [
+    'as' => 'swagger-lume.docs',
+    'middleware' => config('swagger-lume.routes.middleware.docs', []),
+    'uses' => 'Http\Controllers\SwaggerLumeController@docs',
+]);
 
-// Required Parameters
-// $router->get('user/{id}', function ($id) {
-//     return 'User '.$id;
-// });
+$router->get(config('swagger-lume.routes.api'), [
+    'as' => 'swagger-lume.api',
+    'middleware' => config('swagger-lume.routes.middleware.api', []),
+    'uses' => 'Http\Controllers\SwaggerLumeController@api',
+]);
 
-// Optional Parameters
-// $router->get('optional[/{params}]', function ($params = null) {
-//     return $params;
-// });
+$router->get(config('swagger-lume.routes.assets').'/{asset}', [
+    'as' => 'swagger-lume.asset',
+    'middleware' => config('swagger-lume.routes.middleware.asset', []),
+    'uses' => 'Http\Controllers\SwaggerLumeAssetController@index',
+]);
+
+$router->get(config('swagger-lume.routes.oauth2_callback'), [
+    'as' => 'swagger-lume.oauth2_callback',
+    'middleware' => config('swagger-lume.routes.middleware.oauth2_callback', []),
+    'uses' => 'Http\Controllers\SwaggerLumeController@oauth2Callback',
+]);
 
 // Group
 $router->group(['prefix' => 'api/admin', 'middleware' => 'auth'], function ()  use ($router) {
@@ -58,6 +67,8 @@ $router->group(['prefix' => 'api/', 'middleware' => 'auth'], function ()  use ($
 
 
 
-$router->post('/register','AuthController@register');
-$router->post('/login','AuthController@login');
+$router->post('/api/register','AuthController@register');
+$router->post('/api/login','AuthController@login');
+
+
 
